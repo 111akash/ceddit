@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "457361704496",
+    "project_id": "ceddit-de982",
+    "storage_bucket": "ceddit-de982.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457361704496:android:4d1195b96c4f6b4e7c8ff5",
+        "android_client_info": {
+          "package_name": "com.example.ceddit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457361704496-90qp332jbq139r9nf173v7mf72it70um.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ceddit",
+            "certificate_hash": "3c78b22ac92f9b95407fecc3882c892a5fc43409"
+          }
+        },
+        {
+          "client_id": "457361704496-l049tn6llkm7ibfu4mdo095gkb9l0bmh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDSd9ii3vI2Rd02zmiZCNEjn-Pdf_SdAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457361704496-l049tn6llkm7ibfu4mdo095gkb9l0bmh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "457361704496-59to5484ecbmr33878sbt059fkp9d36a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ceddit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
