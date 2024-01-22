@@ -5,20 +5,65 @@ import 'package:routemaster/routemaster.dart';
 class CreateCommunityScreen extends ConsumerStatefulWidget {
   const CreateCommunityScreen({super.key});
 
- 
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _CreateCommunityScreenState();
 }
 
 class _CreateCommunityScreenState extends ConsumerState<CreateCommunityScreen> {
+  final communityNameController = TextEditingController();
+
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    super.dispose();
+    communityNameController.dispose();
   }
 
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Create a community'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            const Align(
+                alignment: Alignment.topLeft, child: Text('Community name')),
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: communityNameController,
+              decoration: const InputDecoration(
+                hintText: 'r/Community_name',
+                filled: true,
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(18),
+              ),
+              maxLength: 21,
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  )),
+              child: const Text(
+                'Create Community',
+                style: TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
