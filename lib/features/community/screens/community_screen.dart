@@ -4,10 +4,15 @@ import 'package:ceddit/features/auth/controller/auth_controller.dart';
 import 'package:ceddit/features/community/controller/community_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class CommunityScreen extends ConsumerWidget {
   final String name;
   const CommunityScreen({required this.name, super.key});
+
+  void navigateToModTools(BuildContext context) {
+    Routemaster.of(context).push('/mod-tools/$name');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,7 +61,9 @@ class CommunityScreen extends ConsumerWidget {
                           ),
                           community.mods.contains(user.uid)
                               ? OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    navigateToModTools(context);
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
