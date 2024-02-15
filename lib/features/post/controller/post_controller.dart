@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:ceddit/core/providers/storage_repository_provider.dart';
 import 'package:ceddit/features/auth/controller/auth_controller.dart';
 import 'package:ceddit/features/post/repository/post_repository.dart';
@@ -20,6 +19,12 @@ final postControllerProvider =
     storageRepository: storageRespository,
     ref: ref,
   );
+});
+
+final userPostsProvider =
+    StreamProvider.family((ref, List<Community> communities) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.fetchUserPosts(communities);
 });
 
 class PostController extends StateNotifier<bool> {
@@ -130,7 +135,7 @@ class PostController extends StateNotifier<bool> {
         commentCount: 0,
         username: user.name,
         uid: user.uid,
-        type: 'link',
+        type: 'image',
         createdAt: DateTime.now(),
         awards: [],
         link: r,
@@ -143,5 +148,12 @@ class PostController extends StateNotifier<bool> {
         Routemaster.of(context).pop();
       });
     });
+  }
+
+  Stream<List<Post>> fetchUserPosts(List<Community> communities) {
+    if (communities.isNotEmpty) {
+      return _postRepository.fetchUserPosts(communities);
+    }
+    return Stream.value([]);
   }
 }
