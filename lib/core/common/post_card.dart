@@ -1,11 +1,15 @@
 import 'package:any_link_preview/any_link_preview.dart';
+import 'package:ceddit/core/common/error_text.dart';
+import 'package:ceddit/core/common/loader.dart';
 import 'package:ceddit/core/constants/constants.dart';
 import 'package:ceddit/features/auth/controller/auth_controller.dart';
+import 'package:ceddit/features/community/controller/community_controller.dart';
 import 'package:ceddit/features/post/controller/post_controller.dart';
 import 'package:ceddit/models/post_model.dart';
 import 'package:ceddit/theme/pallette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class PostCard extends ConsumerWidget {
   final Post post;
@@ -21,6 +25,14 @@ class PostCard extends ConsumerWidget {
 
   void downvotePost(WidgetRef ref) async {
     ref.read(postControllerProvider.notifier).downvote(post);
+  }
+
+  void navigateToUser(BuildContext context) {
+    Routemaster.of(context).push('/u/${post.uid}');
+  }
+
+  void navigateToCommunity(BuildContext context) {
+    Routemaster.of(context).push('/u/${post.communityName}');
   }
 
   @override
@@ -140,6 +152,7 @@ class PostCard extends ConsumerWidget {
                               ),
                             ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
@@ -186,7 +199,26 @@ class PostCard extends ConsumerWidget {
                                     ),
                                   ),
                                 ],
-                              )
+                              ),
+                              ref
+                                  .watch(getCommunityByNameProvider(
+                                      post.communityName))
+                                  .when(
+                                      data: (data) {
+                                        if (data.mods.contains(user.uid)) {
+                                          return IconButton(
+                                            onPressed: () {},
+                                            icon: const Icon(
+                                              Icons.admin_panel_settings,
+                                            ),
+                                          );
+                                        }
+                                        return const SizedBox();
+                                      },
+                                      error: (error, stackTrace) => ErrorText(
+                                            error: error.toString(),
+                                          ),
+                                      loading: () => const Loader()),
                             ],
                           )
                         ],
