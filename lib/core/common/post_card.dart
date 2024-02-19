@@ -32,7 +32,7 @@ class PostCard extends ConsumerWidget {
   }
 
   void navigateToCommunity(BuildContext context) {
-    Routemaster.of(context).push('/u/${post.communityName}');
+    Routemaster.of(context).push('/r/${post.communityName}');
   }
 
   @override
@@ -69,11 +69,14 @@ class PostCard extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      post.communityProfilePic,
+                                  GestureDetector(
+                                    onTap: () => navigateToCommunity(context),
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        post.communityProfilePic,
+                                      ),
+                                      radius: 16,
                                     ),
-                                    radius: 16,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8),
@@ -88,10 +91,13 @@ class PostCard extends ConsumerWidget {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Text(
-                                          'r/${post.username}',
-                                          style: const TextStyle(
-                                            fontSize: 12,
+                                        GestureDetector(
+                                          onTap: () => navigateToUser(context),
+                                          child: Text(
+                                            'r/${post.username}',
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -207,7 +213,8 @@ class PostCard extends ConsumerWidget {
                                       data: (data) {
                                         if (data.mods.contains(user.uid)) {
                                           return IconButton(
-                                            onPressed: () {},
+                                            onPressed: () =>
+                                                deletePost(ref, context),
                                             icon: const Icon(
                                               Icons.admin_panel_settings,
                                             ),

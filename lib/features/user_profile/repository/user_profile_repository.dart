@@ -2,6 +2,7 @@ import 'package:ceddit/core/constants/firebase_constants.dart';
 import 'package:ceddit/core/failure.dart';
 import 'package:ceddit/core/providers/firebase_providers.dart';
 import 'package:ceddit/core/type_defs.dart';
+import 'package:ceddit/models/post_model.dart';
 import 'package:ceddit/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,6 +20,9 @@ class UserProfileRepository {
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
 
+  CollectionReference get _posts =>
+      _firestore.collection(FirebaseConstants.postsCollection);
+
   FutureVoid editProfile(UserModel user) async {
     try {
       return right(_users.doc(user.uid).update(user.toMap()));
@@ -27,5 +31,17 @@ class UserProfileRepository {
     } catch (e) {
       return left(Failure(e.toString()));
     }
+  }
+
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _posts
+        .where('uid', isEqualTo: uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
+              .toList(),
+        );
   }
 }

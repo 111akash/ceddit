@@ -4,6 +4,7 @@ import 'package:ceddit/core/providers/storage_repository_provider.dart';
 import 'package:ceddit/core/utils.dart';
 import 'package:ceddit/features/auth/controller/auth_controller.dart';
 import 'package:ceddit/features/user_profile/repository/user_profile_repository.dart';
+import 'package:ceddit/models/post_model.dart';
 import 'package:ceddit/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +21,11 @@ final userProfileControllerProvider =
   );
 });
 
-class UserProfileController extends StateNotifier<bool> {
+final getUserPostsProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userProfileControllerProvider.notifier).getUserPosts(uid);
+});
+
+final class UserProfileController extends StateNotifier<bool> {
   final UserProfileRepository _userProfileRepository;
   final Ref _ref;
   final StorageRepository _storageRepository;
@@ -74,5 +79,9 @@ class UserProfileController extends StateNotifier<bool> {
       _ref.read(userProvider.notifier).update((state) => user);
       Routemaster.of(context).pop();
     });
+  }
+
+  Stream<List<Post>> getUserPosts(String uid) {
+    return _userProfileRepository.getUserPosts(uid);
   }
 }

@@ -6,6 +6,7 @@ import 'package:ceddit/core/utils.dart';
 import 'package:ceddit/features/auth/controller/auth_controller.dart';
 import 'package:ceddit/features/community/repository/community_repository.dart';
 import 'package:ceddit/models/community_model.dart';
+import 'package:ceddit/models/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -151,5 +152,9 @@ class CommunityController extends StateNotifier<bool> {
       (l) => showSnackBar(context, l.message),
       (r) => Routemaster.of(context).pop(),
     );
+  }
+
+  Stream<List<Post>> getCommunityPosts(String name) {
+    return _communityRepository.getCommunityPosts(name);
   }
 }
