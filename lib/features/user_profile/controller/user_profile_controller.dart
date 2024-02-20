@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ceddit/core/enums/enums.dart';
 import 'package:ceddit/core/providers/storage_repository_provider.dart';
 import 'package:ceddit/core/utils.dart';
 import 'package:ceddit/features/auth/controller/auth_controller.dart';
@@ -83,5 +84,14 @@ final class UserProfileController extends StateNotifier<bool> {
 
   Stream<List<Post>> getUserPosts(String uid) {
     return _userProfileRepository.getUserPosts(uid);
+  }
+
+  void updateUserKarma(UserKarma karma) async {
+    UserModel user = _ref.read(userProvider)!;
+    user = user.copyWith(karma: user.karma + karma.karma);
+
+    final res = await _userProfileRepository.updateUserKarma(user);
+    res.fold((l) => null,
+        (r) => _ref.read(userProvider.notifier).update((state) => user));
   }
 }

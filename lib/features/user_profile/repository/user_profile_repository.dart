@@ -1,4 +1,5 @@
 import 'package:ceddit/core/constants/firebase_constants.dart';
+import 'package:ceddit/core/enums/enums.dart';
 import 'package:ceddit/core/failure.dart';
 import 'package:ceddit/core/providers/firebase_providers.dart';
 import 'package:ceddit/core/type_defs.dart';
@@ -42,6 +43,18 @@ class UserProfileRepository {
           (event) => event.docs
               .map((e) => Post.fromMap(e.data() as Map<String, dynamic>))
               .toList(),
-        );
+        ); 
+  }
+
+  FutureVoid updateUserKarma(UserModel user) async {
+    try {
+      return right(_users.doc(user.uid).update({
+        'karma': user.karma,
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 }
