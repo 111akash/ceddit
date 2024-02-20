@@ -2,7 +2,7 @@ import 'package:ceddit/core/constants/firebase_constants.dart';
 import 'package:ceddit/core/failure.dart';
 import 'package:ceddit/core/providers/firebase_providers.dart';
 import 'package:ceddit/core/type_defs.dart';
-import 'package:ceddit/features/community/repository/community_repository.dart';
+import 'package:ceddit/models/comment_model.dart';
 import 'package:ceddit/models/community_model.dart';
 import 'package:ceddit/models/post_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +20,9 @@ class PostRepository {
 
   CollectionReference get _posts =>
       _firestore.collection(FirebaseConstants.postsCollection);
+
+  CollectionReference get _comments =>
+      _firestore.collection(FirebaseConstants.commentsCollection);
 
   FutureVoid addPost(Post post) async {
     try {
@@ -88,5 +91,40 @@ class PostRepository {
         'downvotes': FieldValue.arrayUnion([userId]),
       });
     }
+  }
+
+  Stream<Post> getPostById(String postId) {
+    return _posts
+        .doc(postId)
+        .snapshots()
+        .map((event) => Post.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  FutureVoid addComment(Comment comment) async {
+    try {
+      await _comments.doc(comment.id).set(comment.toMap());
+
+      return right(_posts.doc(comment.postId).update({
+        'commentCount': FieldValue.increment(1),
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  Stream<List<Comment>> getCommentsOfPost(String postId) {
+    return _comments
+        .where('postId', isEqualTo: postId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Comment.fromMap(e.data() as Map<String, dynamic>),
+              )
+              .toList(),
+        );
   }
 }
