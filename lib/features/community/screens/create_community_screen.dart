@@ -1,5 +1,6 @@
 import 'package:ceddit/core/common/loader.dart';
 import 'package:ceddit/features/community/controller/community_controller.dart';
+import 'package:ceddit/responsive/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -36,44 +37,46 @@ class _CreateCommunityScreenState extends ConsumerState<CreateCommunityScreen> {
       ),
       body: isLoading
           ? const Loader()
-          : Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text('Community name')),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: communityNameController,
-                    decoration: const InputDecoration(
-                      hintText: 'r/Community_name',
-                      filled: true,
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(18),
+          : Responsive(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    const Align(
+                        alignment: Alignment.topLeft,
+                        child: Text('Community name')),
+                    const SizedBox(
+                      height: 10,
                     ),
-                    maxLength: 21,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  ElevatedButton(
-                    onPressed: createCommunity,
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        )),
-                    child: const Text(
-                      'Create Community',
-                      style: TextStyle(
-                        fontSize: 17,
+                    TextField(
+                      controller: communityNameController,
+                      decoration: const InputDecoration(
+                        hintText: 'r/Community_name',
+                        filled: true,
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(18),
                       ),
+                      maxLength: 21,
                     ),
-                  )
-                ],
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    ElevatedButton(
+                      onPressed: createCommunity,
+                      style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          )),
+                      child: const Text(
+                        'Create Community',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
     );

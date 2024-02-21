@@ -7,6 +7,7 @@ import 'package:ceddit/features/auth/controller/auth_controller.dart';
 import 'package:ceddit/features/user_profile/repository/user_profile_repository.dart';
 import 'package:ceddit/models/post_model.dart';
 import 'package:ceddit/models/user_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -43,6 +44,8 @@ final class UserProfileController extends StateNotifier<bool> {
   void editCommunity({
     required File? profileFile,
     required File? bannerFile,
+    required Uint8List? profileWebFile,
+    required Uint8List? bannerWebFile,
     required BuildContext context,
     required String name,
   }) async {
@@ -53,6 +56,7 @@ final class UserProfileController extends StateNotifier<bool> {
         path: "users/profile",
         id: user.uid,
         file: profileFile,
+        webFile: profileWebFile,
       );
       res.fold(
         (l) => showSnackBar(context, l.message),
@@ -62,10 +66,10 @@ final class UserProfileController extends StateNotifier<bool> {
 
     if (bannerFile != null) {
       final res = await _storageRepository.storeFile(
-        path: "users/banner",
-        id: user.uid,
-        file: bannerFile,
-      );
+          path: "users/banner",
+          id: user.uid,
+          file: bannerFile,
+          webFile: bannerWebFile);
       res.fold(
         (l) => showSnackBar(context, l.message),
         (r) => user = user.copyWith(banner: r),

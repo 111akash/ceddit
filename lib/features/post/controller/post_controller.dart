@@ -7,6 +7,7 @@ import 'package:ceddit/features/user_profile/controller/user_profile_controller.
 import 'package:ceddit/models/comment_model.dart';
 import 'package:ceddit/models/community_model.dart';
 import 'package:ceddit/models/post_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -138,6 +139,7 @@ class PostController extends StateNotifier<bool> {
     required String title,
     required Community selectedCommunity,
     required File? file,
+    required Uint8List? webFile,
   }) async {
     state = true;
     String postId = Uuid().v1();
@@ -146,6 +148,7 @@ class PostController extends StateNotifier<bool> {
       path: 'posts/${selectedCommunity.name}',
       id: postId,
       file: file,
+      webFile: webFile,
     );
 
     imageRes.fold((l) => showSnackBar(context, l.message), (r) async {

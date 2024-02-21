@@ -7,6 +7,7 @@ import 'package:ceddit/features/auth/controller/auth_controller.dart';
 import 'package:ceddit/features/community/repository/community_repository.dart';
 import 'package:ceddit/models/community_model.dart';
 import 'package:ceddit/models/post_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -20,10 +21,10 @@ final userCommunitiesProvider = StreamProvider((ref) {
 final communityControllerProvider =
     StateNotifierProvider<CommunityController, bool>((ref) {
   final communityRepository = ref.watch(communityRepositoryProvider);
-  final storageRespository = ref.watch(storageRepositoryProvider);
+  final storageRepository = ref.watch(storageRepositoryProvider);
   return CommunityController(
     communityRepository: communityRepository,
-    storageRepository: storageRespository,
+    storageRepository: storageRepository,
     ref: ref,
   );
 });
@@ -46,7 +47,6 @@ class CommunityController extends StateNotifier<bool> {
   final CommunityRepository _communityRepository;
   final Ref _ref;
   final StorageRepository _storageRepository;
-
   CommunityController({
     required CommunityRepository communityRepository,
     required Ref ref,
@@ -107,16 +107,19 @@ class CommunityController extends StateNotifier<bool> {
   void editCommunity({
     required File? profileFile,
     required File? bannerFile,
+    required Uint8List? profileWebFile,
+    required Uint8List? bannerWebFile,
     required BuildContext context,
     required Community community,
   }) async {
     state = true;
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       // communities/profile/memes
       final res = await _storageRepository.storeFile(
-        path: "communities/profile",
+        path: 'communities/profile',
         id: community.name,
         file: profileFile,
+        webFile: profileWebFile,
       );
       res.fold(
         (l) => showSnackBar(context, l.message),
@@ -124,12 +127,13 @@ class CommunityController extends StateNotifier<bool> {
       );
     }
 
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       // communities/banner/memes
       final res = await _storageRepository.storeFile(
-        path: "communities/banner",
+        path: 'communities/banner',
         id: community.name,
         file: bannerFile,
+        webFile: bannerWebFile,
       );
       res.fold(
         (l) => showSnackBar(context, l.message),

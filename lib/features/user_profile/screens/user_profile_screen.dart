@@ -23,7 +23,7 @@ class UserProfileScreen extends ConsumerWidget {
     return Scaffold(
       body: ref.watch(getUserDataProvider(uid)).when(
             data: (user) => NestedScrollView(
-              headerSliverBuilder: (context, innerBoxScroll) {
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
                     expandedHeight: 250,
@@ -67,40 +67,43 @@ class UserProfileScreen extends ConsumerWidget {
                   SliverPadding(
                     padding: const EdgeInsets.all(16),
                     sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'u/${user.name}',
-                            style: const TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
+                      delegate: SliverChildListDelegate(
+                        [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'u/${user.name}',
+                                style: const TextStyle(
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              '${user.karma} karma',
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          const Divider(thickness: 2),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text('${user.karma} karma'),
-                      ),
-                      const SizedBox(height: 10),
-                      const Divider(thickness: 2),
-                    ])),
-                  )
+                    ),
+                  ),
                 ];
               },
               body: ref.watch(getUserPostsProvider(uid)).when(
                     data: (data) {
                       return ListView.builder(
-                          itemCount: data.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final post = data[index];
-                            return PostCard(post: post);
-                          });
+                        itemCount: data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final post = data[index];
+                          return PostCard(post: post);
+                        },
+                      );
                     },
                     error: (error, stackTrace) {
                       return ErrorText(error: error.toString());
