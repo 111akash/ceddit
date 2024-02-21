@@ -1,6 +1,7 @@
 import 'package:ceddit/core/common/error_text.dart';
 import 'package:ceddit/core/common/loader.dart';
 import 'package:ceddit/core/common/post_card.dart';
+import 'package:ceddit/features/auth/controller/auth_controller.dart';
 import 'package:ceddit/features/post/controller/post_controller.dart';
 import 'package:ceddit/features/post/widgets/comment_card.dart';
 import 'package:ceddit/models/post_model.dart';
@@ -41,6 +42,8 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
+    final isGuest = !user.isAuthenticated;
     return Scaffold(
       appBar: AppBar(),
       body: ref.watch(getPostByIdProvider(widget.postId)).when(
@@ -48,16 +51,16 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
               return Column(
                 children: [
                   PostCard(post: data),
-                  const SizedBox(height: 10),
-                  TextField(
-                    onSubmitted: (val) => addComment(data),
-                    controller: commmentController,
-                    decoration: const InputDecoration(
-                      hintText: 'What are your thoughts?',
-                      filled: true,
-                      border: InputBorder.none,
+                  if (!isGuest)
+                    TextField(
+                      onSubmitted: (val) => addComment(data),
+                      controller: commmentController,
+                      decoration: const InputDecoration(
+                        hintText: 'What are your thoughts?',
+                        filled: true,
+                        border: InputBorder.none,
+                      ),
                     ),
-                  ),
                   ref.watch(getPostCommentsProvider(widget.postId)).when(
                         data: (data) {
                           return Expanded(
